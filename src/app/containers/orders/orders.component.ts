@@ -10,15 +10,17 @@ declare var JsBarcode: any;
 
 })
 export class OrdersComponent implements OnInit {
+  //primeNG table
   @ViewChild('dt', { static: true }) dt: Table;
+  //fire when component is rendered or have been removed.
   @ViewChild('barcode', { static: false }) set userContent(element) {
+    // here you get access only when element is rendered 
     if (element) {
       this.isBarcodeDisplay = true;
       JsBarcode("#barcode", this.selectedRows.size);
-      // here you get access only when element is rendered (or destroyed)
     } else {
+      //component have been removed from dom. 
       this.isBarcodeDisplay = false;
-
     }
   }
 
@@ -27,19 +29,17 @@ export class OrdersComponent implements OnInit {
 
   cols: any[];
 
-  yearFilter: boolean = false;
+  yearFilter: boolean = false; //indication for fliter cancel icon.
 
-  lastItemsAdded;
+  dateValue //varible for date value. used to get null when canceling filter.
 
-  dateValue;
-
-  selectedRows = new Map<string, boolean>();
+  selectedRows = new Map<string, boolean>(); //key - order id | value -  true.
 
   currentPage = 1;
 
-  lastPage;
+  lastPage; //the previous page the user were on.
 
-  checkBoxHeaderValues = new Map<number, boolean>();
+  checkBoxHeaderValues = new Map<number, boolean>(); //key - pageNumber | value - is checked.
 
   rowPerPage = 10;
 
@@ -47,30 +47,36 @@ export class OrdersComponent implements OnInit {
 
   isBarcodeDisplay = false;
 
-  filter = false; //show filter tr.
+  showFilterTr = false; //show filter tr.
   isFilter = false; //is filter activated.
   filterResult = []; //filtered items.
 
   constructor() {
   }
+
   paginate(pageEvent) {
-    let currentPage = pageEvent.first / pageEvent.rows + 1;
+    let currentPage = (pageEvent.first / pageEvent.rows) + 1;
     if (this.lastPage != currentPage) {
       this.currentPage = currentPage;
       this.currentCheckBoxHeader = this.checkBoxHeaderValues.get(this.currentPage);
       //rows per page * pages.
       let TotalNumber = currentPage * pageEvent.rows;
-      //allItems - rows per page * pages (full page scenario).
+      //all items - rows per page * pages (full page scenario).
       // if result is smaller then zero - some empty rows are required.
       let itemsToAdd = ((this.orders.length - TotalNumber) >= 0) ? 0 : Math.abs(this.orders.length - TotalNumber);
-      if (!itemsToAdd) { //if empty row should be spliced.
-        this.orders.splice(this.orders.length - this.lastItemsAdded, this.lastItemsAdded);
-      }
+
       for (let index = 0; index < itemsToAdd; index++) {
         this.orders.push({});
       }
       this.lastPage = currentPage;
     }
+    this.currentCheckBoxHeader = this.isHeaderChecked();
+    if (this.isFilter) {
+      this.checkBoxHeaderValues.set(1, this.currentCheckBoxHeader);
+    } else {
+      this.checkBoxHeaderValues.set(this.currentPage, this.currentCheckBoxHeader);
+    }
+    //generate barcode for each order (if the orders is still in 'waiting' mode).
     $(document).ready(() => {
       this.loopOnCurrentPage((item) => {
         if (item) {
@@ -92,13 +98,6 @@ export class OrdersComponent implements OnInit {
         { "id": "23", "orderdate": "2020-01-01T22:00:00.000Z", "produniqkey": "1113", "comments": "שיהיה מהר" },
       ];
     }
-    this.orders.forEach((order) => {
-      // JsBarcode(`#${order.id}`, "Smallest width", {
-      //   height: 25
-      // });
-      // order['isCheck'] = true;
-    });
-
 
     this.cols = [
       { field: 'id', header: 'id' },
@@ -106,7 +105,7 @@ export class OrdersComponent implements OnInit {
       { field: 'produniqkey', header: 'produniqkey' },
       { field: 'comments', header: 'comments' }
     ];
-
+    //custome filter (primeNg API) - date filter.
     FilterUtils['Date'] = (value: Date, filter: Date): boolean => {
       this.yearFilter = true;
       if (filter === undefined || filter === null) {
@@ -119,10 +118,11 @@ export class OrdersComponent implements OnInit {
       return new Date(value).getMonth() == filter.getMonth() && new Date(value).getFullYear() == filter.getFullYear();
     }
   }
+  //generic funtion for loop the current page orders.
   loopOnCurrentPage(func: Function) {
     let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
     for (let index = firstItemIndex; index < firstItemIndex + this.rowPerPage; index++) {
-      const currentOrder = this.orders[index];
+      const currentOrder = (this.isFilter)? this.filterResult[index]:this.orders[index];
       func(currentOrder);
     }
   }
@@ -133,6 +133,7 @@ export class OrdersComponent implements OnInit {
     } else {
       this.selectedRows.delete(id);
     }
+    //generate summary barcode.
     (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
     this.currentCheckBoxHeader = this.isHeaderChecked();
     if (this.isFilter) {
@@ -148,8 +149,6 @@ export class OrdersComponent implements OnInit {
   }
   togglePageCheckBoxes(isCheck: boolean) {
     if (!this.isFilter) {
-      let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
-
       this.loopOnCurrentPage((item) => {
         //check if this order is not an empty one.
         if (item.id != undefined) {
@@ -158,22 +157,9 @@ export class OrdersComponent implements OnInit {
           } else {
             this.selectedRows.delete(item.id);
           }
-          (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
         }
       });
 
-      // for (let index = firstItemIndex; index < firstItemIndex + 10; index++) {
-      //   const currentOrder = this.orders[index];
-      //   //check if this order is not an empty one.
-      //   if (currentOrder.id != undefined) {
-      //     if (isCheck) {
-      //       this.selectedRows.set(currentOrder.id, true);
-      //     } else {
-      //       this.selectedRows.delete(currentOrder.id);
-      //     }
-      //     (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
-      //   }
-      // }
     } else {
       this.filterResult.forEach((item) => {
         if (isCheck) {
@@ -183,22 +169,23 @@ export class OrdersComponent implements OnInit {
         }
       });
     }
+    //generate summary barcode.
     (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
   }
 
   isHeaderChecked(): boolean {
     let checkValues = true;
+    console.log(this.isFilter);
     if (!this.isFilter) {
-      let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
-      for (let index = firstItemIndex; index < firstItemIndex + this.rowPerPage; index++) {
-        const currentOrder = this.orders[index];
-        //check if this order is not an empty one.
-        if (currentOrder.id != undefined) {
-          if (!this.selectedRows.get(currentOrder.id)) {
+      this.loopOnCurrentPage((item) => {
+        if (item.id != undefined) {
+          if (!this.selectedRows.get(item.id)) {
+            console.log('not checked!');
+            console.log(item);
             checkValues = false;
           }
         }
-      }
+      });
     } else {
       this.filterResult.forEach((item) => {
         if (!this.selectedRows.get(item.id)) {
@@ -210,41 +197,44 @@ export class OrdersComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    $(document).ready(() => {
-      let pageButton = $('.ui-paginator-pages').find('a').get()[0];
-      pageButton.click();
-    });
     $('.ui-table-caption').addClass('flexPosition');
+    //on filter fire (PrimeNg API)
     this.dt.onFilter.subscribe((filter) => {
-      if (filter.filters.global) {
+      if (Object.keys(filter.filters).length !== 0) {
         this.isFilter = true;
-        this.filterResult = filter.filteredValue;
+        this.filterResult = filter.filteredValue; //filterd items.
         this.currentCheckBoxHeader = (this.filterResult.length == 0) ? false : this.isHeaderChecked();
         this.checkBoxHeaderValues.set(this.currentPage, this.currentCheckBoxHeader);
       } else {
+        console.log('no filter');
         this.isFilter = false;
         this.currentCheckBoxHeader = this.isHeaderChecked();
         this.checkBoxHeaderValues.set(this.currentPage, this.currentCheckBoxHeader);
       }
+
+      console.log(filter);
+      $(document).ready(() => {
+        this.lastPage = null;
+        let pageButton = $('.ui-paginator-pages').find('a').get()[0];
+        pageButton.click();
+      });
     });
-    // this.dt.paginator.changePage(this.dt.getPage);
   }
   cancelOrder(id) {
-    console.log(id);
+    //specific order canceld.
     if (id) {
       this.cancelEmitter.emit([id]);
       this.selectedRows.delete(id);
-    } else {
-      let selectedArray = Array.from(this.selectedRows.keys());
+    } else { //some orders to cancel (checkBox's).
+      let selectedArray = Array.from(this.selectedRows.keys()); //map => array.
       this.cancelEmitter.emit(selectedArray);
-      selectedArray.forEach((id)=>{
-        this.selectedRows.delete(id);
+      selectedArray.forEach((id) => {
+        this.selectedRows.delete(id); //delete orders from summary barcode.
       });
-
     }
-    console.log(Array.from(this.selectedRows.keys()));
   }
   ngOnChanges(change) {
+    console.log(change);
     $(document).ready(() => {
       this.lastPage = null;
       let pageButton = $('.ui-paginator-pages').find('a').get()[0];
