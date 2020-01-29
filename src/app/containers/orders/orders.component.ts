@@ -12,12 +12,13 @@ declare var JsBarcode: any;
 export class OrdersComponent implements OnInit {
   @ViewChild('dt', { static: true }) dt: Table;
   @ViewChild('barcode', { static: false }) set userContent(element) {
-    console.log('created');
-    console.log(element);
     if (element) {
       this.isBarcodeDisplay = true;
-      JsBarcode("#barcode", this.barcodeSummary);
+      JsBarcode("#barcode", this.selectedRows.size);
       // here you get access only when element is rendered (or destroyed)
+    } else {
+      this.isBarcodeDisplay = false;
+
     }
   }
 
@@ -50,7 +51,6 @@ export class OrdersComponent implements OnInit {
   isFilter = false; //is filter activated.
   filterResult = []; //filtered items.
 
-  barcodeSummary = 0;
   constructor() {
   }
   paginate(pageEvent) {
@@ -71,6 +71,17 @@ export class OrdersComponent implements OnInit {
       }
       this.lastPage = currentPage;
     }
+    $(document).ready(() => {
+      this.loopOnCurrentPage((item) => {
+        if (item) {
+          if (item.status == 'waiting') {
+            JsBarcode(`#b${item.id}`, item.id, {
+              height: 25
+            });
+          }
+        }
+      });
+    });
   }
 
   ngOnInit() {
@@ -82,8 +93,6 @@ export class OrdersComponent implements OnInit {
       ];
     }
     this.orders.forEach((order) => {
-      this.selectedRows.set(order.id, false);
-      order.isCheck = false;
       // JsBarcode(`#${order.id}`, "Smallest width", {
       //   height: 25
       // });
@@ -100,7 +109,6 @@ export class OrdersComponent implements OnInit {
 
     FilterUtils['Date'] = (value: Date, filter: Date): boolean => {
       this.yearFilter = true;
-      console.log(this.yearFilter);
       if (filter === undefined || filter === null) {
         return true;
       }
@@ -111,64 +119,82 @@ export class OrdersComponent implements OnInit {
       return new Date(value).getMonth() == filter.getMonth() && new Date(value).getFullYear() == filter.getFullYear();
     }
   }
+  loopOnCurrentPage(func: Function) {
+    let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
+    for (let index = firstItemIndex; index < firstItemIndex + this.rowPerPage; index++) {
+      const currentOrder = this.orders[index];
+      func(currentOrder);
+    }
+  }
 
   onCheckBoxChange(isCheck, id) {
-    this.orders.find((order) => order.id == id).isCheck = (isCheck) ? true : false;
-    this.selectedRows.set(id, isCheck);
-    this.barcodeSummary += (isCheck) ? 1 : -1;
-    (this.isBarcodeDisplay)? JsBarcode("#barcode", this.barcodeSummary):'';
+    if (isCheck) {
+      this.selectedRows.set(id, isCheck)
+    } else {
+      this.selectedRows.delete(id);
+    }
+    (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
     this.currentCheckBoxHeader = this.isHeaderChecked();
     if (this.isFilter) {
       this.checkBoxHeaderValues.set(1, this.currentCheckBoxHeader);
     } else {
       this.checkBoxHeaderValues.set(this.currentPage, this.currentCheckBoxHeader);
     }
-    console.log(id);
   }
 
   onHeaderCheckBoxChange(isCheck: boolean) {
     this.checkBoxHeaderValues.set(this.currentPage, isCheck);
     this.togglePageCheckBoxes(isCheck);
-    console.log('header checked');
   }
   togglePageCheckBoxes(isCheck: boolean) {
     if (!this.isFilter) {
       let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
-      for (let index = firstItemIndex; index < firstItemIndex + 10; index++) {
-        const currentOrder = this.orders[index];
+
+      this.loopOnCurrentPage((item) => {
         //check if this order is not an empty one.
-        if (currentOrder.id != undefined) {
-          this.selectedRows.set(currentOrder.id, isCheck);
-          this.barcodeSummary += (isCheck) ? 1 : -1;
-          (this.isBarcodeDisplay)? JsBarcode("#barcode", this.barcodeSummary):'';
-
-          currentOrder.isCheck = isCheck;
+        if (item.id != undefined) {
+          if (isCheck) {
+            this.selectedRows.set(item.id, true);
+          } else {
+            this.selectedRows.delete(item.id);
+          }
+          (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
         }
-      }
-      console.log('no filter!')
-    } else {
-      console.log('filter!')
-      this.filterResult.forEach((item) => {
-        this.selectedRows.set(item.id, isCheck);
-        this.barcodeSummary += (isCheck) ? 1 : -1;
-        (this.isBarcodeDisplay)? JsBarcode("#barcode", this.barcodeSummary):'';
+      });
 
-        item.isCheck = isCheck;
-      })
+      // for (let index = firstItemIndex; index < firstItemIndex + 10; index++) {
+      //   const currentOrder = this.orders[index];
+      //   //check if this order is not an empty one.
+      //   if (currentOrder.id != undefined) {
+      //     if (isCheck) {
+      //       this.selectedRows.set(currentOrder.id, true);
+      //     } else {
+      //       this.selectedRows.delete(currentOrder.id);
+      //     }
+      //     (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
+      //   }
+      // }
+    } else {
+      this.filterResult.forEach((item) => {
+        if (isCheck) {
+          this.selectedRows.set(item.id, true);
+        } else {
+          this.selectedRows.delete(item.id);
+        }
+      });
     }
+    (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
   }
 
   isHeaderChecked(): boolean {
     let checkValues = true;
     if (!this.isFilter) {
       let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
-      for (let index = firstItemIndex; index < firstItemIndex + 10; index++) {
+      for (let index = firstItemIndex; index < firstItemIndex + this.rowPerPage; index++) {
         const currentOrder = this.orders[index];
         //check if this order is not an empty one.
         if (currentOrder.id != undefined) {
           if (!this.selectedRows.get(currentOrder.id)) {
-            console.log(currentOrder);
-            console.log(this.selectedRows);
             checkValues = false;
           }
         }
@@ -185,18 +211,11 @@ export class OrdersComponent implements OnInit {
 
   ngAfterViewInit() {
     $(document).ready(() => {
-      this.orders.forEach((order) => {
-        JsBarcode(`#b${order.id}`, order.id, {
-          height: 25
-        });
-      });
       let pageButton = $('.ui-paginator-pages').find('a').get()[0];
       pageButton.click();
     });
     $('.ui-table-caption').addClass('flexPosition');
     this.dt.onFilter.subscribe((filter) => {
-      console.log('filter');
-      console.log(filter);
       if (filter.filters.global) {
         this.isFilter = true;
         this.filterResult = filter.filteredValue;
@@ -210,10 +229,26 @@ export class OrdersComponent implements OnInit {
     });
     // this.dt.paginator.changePage(this.dt.getPage);
   }
-  cancelOrder() {
-    this.cancelEmitter.emit(Array.from(this.selectedRows.keys()));
+  cancelOrder(id) {
+    console.log(id);
+    if (id) {
+      this.cancelEmitter.emit([id]);
+      this.selectedRows.delete(id);
+    } else {
+      let selectedArray = Array.from(this.selectedRows.keys());
+      this.cancelEmitter.emit(selectedArray);
+      selectedArray.forEach((id)=>{
+        this.selectedRows.delete(id);
+      });
+
+    }
+    console.log(Array.from(this.selectedRows.keys()));
   }
   ngOnChanges(change) {
-    console.log(change);
+    $(document).ready(() => {
+      this.lastPage = null;
+      let pageButton = $('.ui-paginator-pages').find('a').get()[0];
+      pageButton.click();
+    });
   }
 }

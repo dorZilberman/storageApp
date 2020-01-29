@@ -14,7 +14,7 @@
             </ng-template>
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th style="width: 3em">
+                    <th style="width: 3em" *ngIf='orders[0]?.status == "waiting"'>
                         <p-checkbox id="header" *ngIf='!isFilter || (isFilter &&  currentPage == 1) '
                             (onChange)='onHeaderCheckBoxChange($event)' binary="true"
                             [(ngModel)]='currentCheckBoxHeader'></p-checkbox>
@@ -73,22 +73,22 @@
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
                 <tr [pSelectableRow]="rowData" style="height: 24px !important; padding: 10px !important;">
-                    <td>
+                    <td *ngIf='orders[0]?.status == "waiting"'>
                         <!-- <p-tableCheckbox  id="{{rowData.id}}" [disabled]="!rowData.id"  *ngIf='rowData'  [value]="!rowData.id ? false : rowData"></p-tableCheckbox> -->
-                        <p-checkbox binary="true" id="{{rowData.id}}" [disabled]="!rowData.id" *ngIf='rowData'
-                            [(ngModel)]="rowData.isCheck" (onChange)='onCheckBoxChange($event,rowData.id)'></p-checkbox>
+                        <p-checkbox binary="true" id="{{rowData.id}}" *ngIf='rowData.id'
+                            [ngModel]="(this.selectedRows.has(rowData.id))" (onChange)='onCheckBoxChange($event,rowData.id)'></p-checkbox>
                     </td>
                     <td style=" height: 24px !important; padding: 0 !important;" *ngFor="let col of columns">
                         {{rowData[col.field]}}
                     </td>
                     <td *ngIf='orders[0]?.status != "waiting"'>
-                        {{rowData[status]}}
+                        {{rowData['status']}}
                     </td>
                     <td *ngIf='orders[0]?.status == "waiting" && rowData.id'>
-                        <svg id="b{{rowData.id}}"></svg>
+                        <svg style="max-width: 100%; height: 2.5rem;" id="b{{rowData.id}}"></svg>
                     </td>
                     <td *ngIf='orders[0]?.status == "waiting" && rowData.id'>
-                        <i-feather (click)='cancelOrder()' name="x" class="small"
+                        <i-feather (click)='cancelOrder(rowData["id"])' name="x" class="small"
                             style="color: #474a94; cursor: pointer;"></i-feather>
                     </td>
                 </tr>
@@ -97,17 +97,17 @@
 
     </div>
 
-    <div class="summary" *ngIf='barcodeSummary > 0' #barcode>
+    <div class="summary" *ngIf='this.selectedRows.size > 0' #barcode>
         <div class="text">
             summary barcode:
-            {{selectedRows.length}}
+            {{selectedRows.size}}
         </div>
         <div class="barcode">
             <svg id="barcode"></svg>
         </div>
 
         <div class="summaryBtn">
-            <p-button label="remove selected orders"></p-button>
+            <p-button (click)='cancelOrder()' label="remove selected orders"></p-button>
         </div>
     </div>
 </div>

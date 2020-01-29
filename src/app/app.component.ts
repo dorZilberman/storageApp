@@ -13,7 +13,6 @@ export class AppComponent {
 
   constructor(private _postgres: PostgresService, private _context: ContextService) {
     this._postgres.readMany(this._context.postgressUrl).then((res) => {
-      console.log(res);
         this.orders = (Array.isArray(res))? res: [];
     });
 
@@ -22,7 +21,6 @@ export class AppComponent {
   onCancel(selected: any[]) {
     selected.forEach((itemId) => {
       this._postgres.update(this._context.postgressUrl, itemId).then((res) => {
-        console.log(res);
         this.orders = (Array.isArray(res))? res: [];
       })
     })

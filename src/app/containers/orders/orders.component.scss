@@ -85,7 +85,7 @@
 }
 input {
   height: 20px !important;
-  width: 140px !important;
+  width: 100% !important;
   margin: 0;
   text-align: center !important;
 }
@@ -134,4 +134,12 @@ input {
 
 ::ng-deep .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active{
   background-color: #474a94 !important;
+}
+
+::ng-deep .ui-calendar {
+  width: 100% !important;
+}
+
+::ng-deep .ui-inputtext {
+  width: 100% !important;
 }
