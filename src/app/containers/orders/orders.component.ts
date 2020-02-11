@@ -16,11 +16,11 @@ export class OrdersComponent implements OnInit {
   @ViewChild('barcode', { static: false }) set userContent(element) {
     // here you get access only when element is rendered 
     if (element) {
-      this.isBarcodeDisplay = true;
+      this.isSummaryBarcodeDisplay = true;
       JsBarcode("#barcode", this.selectedRows.size);
     } else {
       //component have been removed from dom. 
-      this.isBarcodeDisplay = false;
+      this.isSummaryBarcodeDisplay = false;
     }
   }
 
@@ -31,7 +31,7 @@ export class OrdersComponent implements OnInit {
 
   yearFilter: boolean = false; //indication for fliter cancel icon.
 
-  dateValue //varible for date value. used to get null when canceling filter.
+  dateValue:Date; //varible for date value. used to get null when canceling filter.
 
   selectedRows = new Map<string, boolean>(); //key - order id | value -  true.
 
@@ -45,7 +45,7 @@ export class OrdersComponent implements OnInit {
 
   currentCheckBoxHeader = false;
 
-  isBarcodeDisplay = false;
+  isSummaryBarcodeDisplay = false;
 
   showFilterTr = false; //show filter tr.
   isFilter = false; //is filter activated.
@@ -55,6 +55,7 @@ export class OrdersComponent implements OnInit {
   }
 
   paginate(pageEvent) {
+    console.log(pageEvent);
     let currentPage = (pageEvent.first / pageEvent.rows) + 1;
     if (this.lastPage != currentPage) {
       this.currentPage = currentPage;
@@ -63,7 +64,7 @@ export class OrdersComponent implements OnInit {
       let TotalNumber = currentPage * pageEvent.rows;
       //all items - rows per page * pages (full page scenario).
       // if result is smaller then zero - some empty rows are required.
-      let itemsToAdd = ((this.orders.length - TotalNumber) >= 0) ? 0 : Math.abs(this.orders.length - TotalNumber);
+      let itemsToAdd = ((this.orders.length - TotalNumber) == 0) ? 0 : Math.abs(this.orders.length - TotalNumber);
 
       for (let index = 0; index < itemsToAdd; index++) {
         this.orders.push({});
@@ -107,7 +108,7 @@ export class OrdersComponent implements OnInit {
     ];
     //custome filter (primeNg API) - date filter.
     FilterUtils['Date'] = (value: Date, filter: Date): boolean => {
-      this.yearFilter = true;
+      this.yearFilter = false;
       if (filter === undefined || filter === null) {
         return true;
       }
@@ -122,7 +123,7 @@ export class OrdersComponent implements OnInit {
   loopOnCurrentPage(func: Function) {
     let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
     for (let index = firstItemIndex; index < firstItemIndex + this.rowPerPage; index++) {
-      const currentOrder = (this.isFilter)? this.filterResult[index]:this.orders[index];
+      const currentOrder = (this.isFilter) ? this.filterResult[index] : this.orders[index];
       func(currentOrder);
     }
   }
@@ -134,7 +135,7 @@ export class OrdersComponent implements OnInit {
       this.selectedRows.delete(id);
     }
     //generate summary barcode.
-    (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
+    (this.isSummaryBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
     this.currentCheckBoxHeader = this.isHeaderChecked();
     if (this.isFilter) {
       this.checkBoxHeaderValues.set(1, this.currentCheckBoxHeader);
@@ -170,7 +171,7 @@ export class OrdersComponent implements OnInit {
       });
     }
     //generate summary barcode.
-    (this.isBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
+    (this.isSummaryBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
   }
 
   isHeaderChecked(): boolean {

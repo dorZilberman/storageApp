@@ -12,16 +12,22 @@ export class AppComponent {
   orders;
 
   constructor(private _postgres: PostgresService, private _context: ContextService) {
-    this._postgres.readMany(this._context.postgressUrl).then((res) => {
-        this.orders = (Array.isArray(res))? res: [];
-    });
-
+    this.onRefresh();
   }
-
+  onRefresh() {
+    this._postgres.readMany(this._context.postgressUrl).then((res) => {
+      res.forEach(order => {
+        console.log(order);
+        //@ts-ignore  
+        order.orderdate = new Date(order.orderdate).format("dd/mm/yy");
+      });
+      this.orders = (Array.isArray(res)) ? res : [];
+    });
+  }
   onCancel(selected: any[]) {
     selected.forEach((itemId) => {
       this._postgres.update(this._context.postgressUrl, itemId).then((res) => {
-        this.orders = (Array.isArray(res))? res: [];
+        this.orders = (Array.isArray(res)) ? res : [];
       })
     })
   }

@@ -1,4 +1,5 @@
 <div class="pageContainer">
+
     <div class="tableSection">
 
         <p-table #dt [columns]="cols" [virtualRowHeight]="30" [value]="orders" (onPage)="paginate($event)"
@@ -30,11 +31,12 @@
                         barcode
                     </th>
                     <th *ngIf='orders[0]?.status == "waiting"'>
-
+                    <!-- placeHolder for 'x' option -->
                     </th>
                 </tr>
                 <tr *ngIf='filter'>
                     <th style="width: 3em">
+                    <!-- placeHolder for blankcheckBox -->
                     </th>
                     <th *ngFor="let col of columns" id="filters" [ngSwitch]="col.field">
                         <span class="serachArea">
@@ -47,12 +49,12 @@
                             <span class="inputContainer" *ngSwitchCase="'orderdate'">
                                 <p-calendar [(ngModel)]="dateValue" view="month" dateFormat="mm/yy"
                                     [yearNavigator]="true" yearRange="2019:2020"
-                                    (onSelect)="dt.filter($event, col.field, 'Date')">
+                                    (onSelect)="dt.filter($event, col.field, 'Date');   this.yearFilter = true;">
                                 </p-calendar>
                                 <i-feather name="search" class="search small"></i-feather>
                                 <i-feather name="x" class="small x"
-                                    (click)="yearFilter=null; dateValue=null;dt.filter(null, col.field, col.filterMatchMode)"
-                                    style="cursor:pointer" *ngIf="yearFilter">
+                                    (click)="this.yearFilter=false; dateValue=null;dt.filter(null, col.field, col.filterMatchMode)"
+                                    style="cursor:pointer" *ngIf="this.yearFilter">
                                 </i-feather>
                             </span>
                             <!-- <p-dropdown *ngSwitchCase="'orderdate'" [options]="orderdate" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown> -->

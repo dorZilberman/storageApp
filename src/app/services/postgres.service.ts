@@ -18,15 +18,16 @@ export class PostgresService {
   }
 
   async readMany(url: string): Promise<any> {
-    return await this._http.get(url,{ responseType: 'json' }).toPromise();
+    return await this._http.get(url, { responseType: 'json' }).toPromise();
   }
 
-  async update(url: string, id:string): Promise<any> {
-    return await this._http.put(url, {orderId:id, newStatus:'failure'}, { responseType: 'json' }).toPromise();
+  async update(url: string, id: string): Promise<any> {
+    return await this._http.put(url, { orderId: id, newStatus: 'failure' }, { responseType: 'json' }).toPromise();
   }
 
-  async delete(url: string): Promise<any> {
-
+  async delete(url: string, id): Promise<any> {
+    console.log(id);
+    return await this._http.delete(url,{params:id , responseType:'text'}).toPromise();
   }
 
 

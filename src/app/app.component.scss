@@ -25,6 +25,11 @@ img {
   height: calc(100% - 3.5rem)
 }
 
+.refresh{
+  cursor: pointer;;
+  color: #474a94;
+  text-align: right;
+}
 ::ng-deep .ui-tabview-panel{
   text-align: center !important;
 }

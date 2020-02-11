@@ -11,12 +11,14 @@ import { FormsModule } from '@angular/forms';
 import { IconsModule } from './icons/icons.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FilterArrayPipe } from './pipes/filter-array.pipe';
+import { RefreshBtnComponent } from './components/refresh-btn/refresh-btn.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     OrdersComponent,
-    FilterArrayPipe
+    FilterArrayPipe,
+    RefreshBtnComponent
   ],
   imports: [
     BrowserModule,
