@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, ViewChild, IterableDiffers, Input, Output, EventEmitter } from '@angular/core';
 import { FilterUtils } from 'primeng/utils';
-import { Paginator, Table } from 'primeng';
+import { Table } from 'primeng';
 declare var JsBarcode: any;
 
 @Component({
@@ -55,7 +55,6 @@ export class OrdersComponent implements OnInit {
   }
 
   paginate(pageEvent) {
-    console.log(pageEvent);
     let currentPage = (pageEvent.first / pageEvent.rows) + 1;
     if (this.lastPage != currentPage) {
       this.currentPage = currentPage;
@@ -176,13 +175,10 @@ export class OrdersComponent implements OnInit {
 
   isHeaderChecked(): boolean {
     let checkValues = true;
-    console.log(this.isFilter);
     if (!this.isFilter) {
       this.loopOnCurrentPage((item) => {
         if (item.id != undefined) {
           if (!this.selectedRows.get(item.id)) {
-            console.log('not checked!');
-            console.log(item);
             checkValues = false;
           }
         }
@@ -207,13 +203,11 @@ export class OrdersComponent implements OnInit {
         this.currentCheckBoxHeader = (this.filterResult.length == 0) ? false : this.isHeaderChecked();
         this.checkBoxHeaderValues.set(this.currentPage, this.currentCheckBoxHeader);
       } else {
-        console.log('no filter');
         this.isFilter = false;
         this.currentCheckBoxHeader = this.isHeaderChecked();
         this.checkBoxHeaderValues.set(this.currentPage, this.currentCheckBoxHeader);
       }
 
-      console.log(filter);
       $(document).ready(() => {
         this.lastPage = null;
         let pageButton = $('.ui-paginator-pages').find('a').get()[0];
@@ -235,7 +229,6 @@ export class OrdersComponent implements OnInit {
     }
   }
   ngOnChanges(change) {
-    console.log(change);
     $(document).ready(() => {
       this.lastPage = null;
       let pageButton = $('.ui-paginator-pages').find('a').get()[0];

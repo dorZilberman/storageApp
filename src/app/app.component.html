@@ -9,7 +9,7 @@
 <div class="app-container">
   <div class="refresh">
     <!-- <i-feather name="refresh-cw" class="refresh small"></i-feather> -->
-    <app-refresh-btn (refresh)='onRefresh()'></app-refresh-btn>
+    <app-refresh-btn (refreshEmitter)='onRefresh()'></app-refresh-btn>
   </div>
   <p-tabView>
     <p-tabPanel header="Orders" leftIcon="pi pi-calendar">

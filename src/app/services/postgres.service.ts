@@ -26,7 +26,6 @@ export class PostgresService {
   }
 
   async delete(url: string, id): Promise<any> {
-    console.log(id);
     return await this._http.delete(url,{params:id , responseType:'text'}).toPromise();
   }
 
