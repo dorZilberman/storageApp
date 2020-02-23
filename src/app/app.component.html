@@ -1,0 +1,34 @@
+<div class="header">
+  <span class="header-text">
+    <span class="header-logo">
+      <img src="../assets/img/shipping2.svg">
+      IAF LOGISTIC
+    </span>
+  </span>
+</div>
+<div class="app-container">
+  <div class="refresh">
+    <!-- <i-feather name="refresh-cw" class="refresh small"></i-feather> -->
+    <app-refresh-btn (refreshEmitter)='onRefresh()'></app-refresh-btn>
+  </div>
+  <p-tabView>
+    <p-tabPanel header="Orders" leftIcon="pi pi-calendar">
+      <span *ngIf='(orders | filterArray: waitingFilter) as res'>
+        <app-orders (cancelEmitter)='onCancel($event,selected)' *ngIf='res?.length > 0' [orders]='res'></app-orders>
+        <span *ngIf='res?.length == 0'>
+          No Data Yet 
+          {{res.length}}
+        </span>
+      </span>
+    </p-tabPanel>
+    <p-tabPanel header="History" leftIcon="pi pi-inbox">
+      <span *ngIf='(orders  | filterArray: readyFilter) as res'>
+        <app-orders *ngIf='orders' [orders]='res'></app-orders>
+       <span *ngIf='res?.length == 0'>
+         No Data Yet 
+       </span>
+      </span>
+    </p-tabPanel>
+  </p-tabView>
+  <!-- <router-outlet></router-outlet> -->
+</div>

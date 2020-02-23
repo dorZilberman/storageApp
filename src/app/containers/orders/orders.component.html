@@ -1,0 +1,115 @@
+<div class="pageContainer">
+
+    <div class="tableSection">
+
+        <p-table #dt [columns]="cols" [virtualRowHeight]="30" [value]="orders" (onPage)="paginate($event)"
+            [paginator]="true" [(selection)]="selectedRows" dataKey="id" [rows]="rowPerPage">
+            <ng-template pTemplate="caption" style="display: flex;">
+                <div style="text-align: left;" class="filterContainer">
+                    <!-- <i class="fa fa-search" style="margin:4px 4px 0 0"></i> -->
+                    <input type="text" pInputText size="50" placeholder="Global Filter"
+                        (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+                    <i-feather name="search" class="search small"></i-feather>
+                </div>
+                <i-feather (click)='filter=!filter;' name="filter" class="small" style="cursor: pointer;"></i-feather>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th style="width: 3em" *ngIf='orders[0]?.status == "waiting"'>
+                        <p-checkbox id="header" *ngIf='!isFilter || (isFilter &&  currentPage == 1) '
+                            (onChange)='onHeaderCheckBoxChange($event)' binary="true"
+                            [(ngModel)]='currentCheckBoxHeader'></p-checkbox>
+                        <!-- <p-tableHeaderCheckbox (onCange)='checkBoxChange($event)'></p-tableHeaderCheckbox> -->
+                    </th>
+                    <th *ngFor="let col of columns" id="headers">
+                        {{col.header}}
+                    </th>
+                    <th *ngIf='orders[0]?.status != "waiting"'>
+                        status
+                    </th>
+                    <th *ngIf='orders[0]?.status == "waiting"'>
+                        barcode
+                    </th>
+                    <th *ngIf='orders[0]?.status == "waiting"'>
+                    <!-- placeHolder for 'x' option -->
+                    </th>
+                </tr>
+                <tr *ngIf='filter'>
+                    <th style="width: 3em">
+                    <!-- placeHolder for blankcheckBox -->
+                    </th>
+                    <th *ngFor="let col of columns" id="filters" [ngSwitch]="col.field">
+                        <span class="serachArea">
+                            <span class="inputContainer" *ngSwitchCase="'id'">
+                                <input pInputText type="text"
+                                    (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                <i-feather name="search" class="search small"></i-feather>
+                            </span>
+
+                            <span class="inputContainer" *ngSwitchCase="'orderdate'">
+                                <p-calendar [(ngModel)]="dateValue" view="month" dateFormat="mm/yy"
+                                    [yearNavigator]="true" yearRange="2019:2020"
+                                    (onSelect)="dt.filter($event, col.field, 'Date');   this.yearFilter = true;">
+                                </p-calendar>
+                                <i-feather name="search" class="search small"></i-feather>
+                                <i-feather name="x" class="small x"
+                                    (click)="this.yearFilter=false; dateValue=null;dt.filter(null, col.field, col.filterMatchMode)"
+                                    style="cursor:pointer" *ngIf="this.yearFilter">
+                                </i-feather>
+                            </span>
+                            <!-- <p-dropdown *ngSwitchCase="'orderdate'" [options]="orderdate" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown> -->
+                            <span class="inputContainer" *ngSwitchCase="'produniqkey'">
+                                <input pInputText type="text"
+                                    (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                <i-feather name="search" class="search small"></i-feather>
+                            </span>
+
+                            <span class="inputContainer" *ngSwitchCase="'comments'">
+                                <input pInputText type="text"
+                                    (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                <i-feather name="search" class="search small"></i-feather>
+                            </span>
+                        </span>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData" style="height: 24px !important; padding: 10px !important;">
+                    <td *ngIf='orders[0]?.status == "waiting"'>
+                        <!-- <p-tableCheckbox  id="{{rowData.id}}" [disabled]="!rowData.id"  *ngIf='rowData'  [value]="!rowData.id ? false : rowData"></p-tableCheckbox> -->
+                        <p-checkbox binary="true" id="{{rowData.id}}" *ngIf='rowData.id'
+                            [ngModel]="(this.selectedRows.has(rowData.id))" (onChange)='onCheckBoxChange($event,rowData.id)'></p-checkbox>
+                    </td>
+                    <td style=" height: 24px !important; padding: 0 !important;" *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>
+                    <td *ngIf='orders[0]?.status != "waiting"'>
+                        {{rowData['status']}}
+                    </td>
+                    <td *ngIf='orders[0]?.status == "waiting" && rowData.id'>
+                        <svg style="max-width: 100%; height: 2.5rem;" id="b{{rowData.id}}"></svg>
+                    </td>
+                    <td *ngIf='orders[0]?.status == "waiting" && rowData.id'>
+                        <i-feather (click)='cancelOrder(rowData["id"])' name="x" class="small"
+                            style="color: #474a94; cursor: pointer;"></i-feather>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+    </div>
+
+    <div class="summary" *ngIf='this.selectedRows.size > 0' #barcode>
+        <div class="text">
+            summary barcode:
+            {{selectedRows.size}}
+        </div>
+        <div class="barcode">
+            <svg id="barcode"></svg>
+        </div>
+
+        <div class="summaryBtn">
+            <p-button (click)='cancelOrder()' label="remove selected orders"></p-button>
+        </div>
+    </div>
+</div>

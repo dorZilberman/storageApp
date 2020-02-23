@@ -1,0 +1,134 @@
+.refreshPosition {
+  margin-top: 10px;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  right: 1.5rem;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: 999;
+}
+.refresher {
+  position: relative;
+}
+.refresher svg {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: -webkit-transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28),
+    -webkit-transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.refresher svg path,
+.refresher svg polyline {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.refresher.loading .icon-refresh {
+  -webkit-animation: refresh 1s infinite linear;
+  animation: refresh 1s infinite linear;
+}
+.refresher .icon-success circle {
+  fill: rgb(71, 74, 148);
+  -webkit-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: -webkit-transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28),
+    -webkit-transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.refresher .icon-success path {
+  stroke-dasharray: 56.0029;
+  stroke-dashoffset: 56.0029;
+  opacity: 0;
+  -webkit-transition: stroke-dashoffset 350ms 100ms ease;
+  transition: stroke-dashoffset 350ms 100ms ease;
+}
+.refresher.success .icon-refresh {
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+.refresher.success .icon-success circle {
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+.refresher.success .icon-success path {
+  stroke-dashoffset: 0;
+  opacity: 1;
+  -webkit-transition: opacity 0s, stroke-dashoffset 0.4s;
+  transition: opacity 0s, stroke-dashoffset 0.4s;
+}
+.refresher .icon-error {
+  -webkit-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: -webkit-transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28),
+    -webkit-transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.refresher .icon-error circle {
+  fill: #ff6347;
+}
+.refresher .icon-error polyline {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-dashoffset: 185;
+  stroke-dasharray: 100;
+  opacity: 0;
+}
+.refresher.error .icon-refresh {
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+.refresher.error .icon-error {
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+.refresher.error .icon-error polyline {
+  opacity: 1;
+  stroke-dashoffset: 200;
+  -webkit-transition: opacity 0s, stroke-dashoffset 0.4s;
+  transition: opacity 0s, stroke-dashoffset 0.4s;
+}
+.refresher.error .icon-error polyline:nth-child(3) {
+  -webkit-transition-delay: 0.25s;
+  transition-delay: 0.25s;
+}
+button {
+  margin: 10px;
+}
+@-webkit-keyframes refresh {
+  from {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes refresh {
+  from {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
