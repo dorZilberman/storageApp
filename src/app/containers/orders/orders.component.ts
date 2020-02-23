@@ -25,6 +25,7 @@ export class OrdersComponent implements OnInit {
   }
 
   @Input() orders;
+  @Input() rowPerPage;
   @Output() cancelEmitter = new EventEmitter<any[]>();
 
   cols: any[];
@@ -40,8 +41,6 @@ export class OrdersComponent implements OnInit {
   lastPage; //the previous page the user were on.
 
   checkBoxHeaderValues = new Map<number, boolean>(); //key - pageNumber | value - is checked.
-
-  rowPerPage = 10;
 
   currentCheckBoxHeader = false;
 
