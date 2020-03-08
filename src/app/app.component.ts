@@ -16,7 +16,6 @@ export class AppComponent {
   onRefresh() {
     console.log('res');
     this._postgres.readMany(this._context.postgressUrl).then((res) => {
-      console.log(res);
       res.forEach(order => {
         //@ts-ignore  
         order.orderdate = new Date(order.orderdate).format("dd/mm/yy");

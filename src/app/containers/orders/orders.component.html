@@ -3,7 +3,7 @@
     <div class="tableSection">
 
         <p-table #dt [columns]="cols" [virtualRowHeight]="30" [value]="orders" (onPage)="paginate($event)"
-            [paginator]="true" [(selection)]="selectedRows" dataKey="id" [rows]="rowPerPage">
+            [paginator]="true" [(selection)]="selectedRows" dataKey="id" [rows]="rowPerPage" >
             <ng-template pTemplate="caption" style="display: flex;">
                 <div style="text-align: left;" class="filterContainer">
                     <!-- <i class="fa fa-search" style="margin:4px 4px 0 0"></i> -->
@@ -28,7 +28,7 @@
                         status
                     </th>
                     <th *ngIf='orders[0]?.status == "waiting"'>
-                        barcode
+                        barcode 
                     </th>
                     <th *ngIf='orders[0]?.status == "waiting"'>
                     <!-- placeHolder for 'x' option -->
