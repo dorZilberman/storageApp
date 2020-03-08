@@ -24,11 +24,14 @@ export class OrdersComponent implements OnInit {
     }
   }
 
-  @Input() orders;
+  @Input() set _orders(value){
+    this.orders = value;
+    this.lastTimeAdded = null;
+  }
   @Output() cancelEmitter = new EventEmitter<any[]>();
 
   cols: any[];
-
+  orders;
   yearFilter: boolean = false; //indication for fliter cancel icon.
 
   dateValue: Date; //varible for date value. used to get null when canceling filter.
