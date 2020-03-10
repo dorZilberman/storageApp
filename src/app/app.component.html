@@ -14,7 +14,7 @@
   <p-tabView>
     <p-tabPanel header="Orders" leftIcon="pi pi-calendar">
       <span *ngIf='(orders | filterArray: waitingFilter) as res'>
-        <app-orders (cancelEmitter)='onCancel($event,selected)' *ngIf='res?.length > 0' [_orders]='res'
+        <app-orders (cancelEmitter)='onCancel($event,selected)' *ngIf='res?.length > 0' [orders]='res'
           [rowPerPage]='6'></app-orders>
         <span *ngIf='res?.length == 0'>
           No Data Yet 
@@ -24,7 +24,7 @@
     </p-tabPanel>
     <p-tabPanel header="History" leftIcon="pi pi-inbox">
       <span *ngIf='(orders  | filterArray: readyFilter) as res'>
-        <app-orders *ngIf='orders' [_orders]='res' [rowPerPage]='10'></app-orders>
+        <app-orders *ngIf='orders' [orders]='res' [rowPerPage]='10'></app-orders>
        <span *ngIf='res?.length == 0'>
          No Data Yet 
        </span>
