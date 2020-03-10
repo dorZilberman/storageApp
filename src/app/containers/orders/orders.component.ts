@@ -24,14 +24,10 @@ export class OrdersComponent implements OnInit {
     }
   }
 
-  @Input() set _orders(value){
-    this.orders = value;
-    this.lastTimeAdded = null;
-  }
+  @Input() orders;
   @Output() cancelEmitter = new EventEmitter<any[]>();
 
   cols: any[];
-  orders;
   yearFilter: boolean = false; //indication for fliter cancel icon.
 
   dateValue: Date; //varible for date value. used to get null when canceling filter.
@@ -41,8 +37,6 @@ export class OrdersComponent implements OnInit {
   currentPage = 1;
 
   lastPage; //the previous page the user were on.
-
-  lastTimeAdded; //the previous blank items added counter.
 
   checkBoxHeaderValues = new Map<number, boolean>(); //key - pageNumber | value - is checked.
 
@@ -62,31 +56,11 @@ export class OrdersComponent implements OnInit {
   paginate(pageEvent) {
     let currentPage = (pageEvent.first / pageEvent.rows) + 1;
     if (this.lastPage != currentPage) {
-      if (this.lastTimeAdded > 0) {
-        console.log('all items ' + this.orders.length);
-        console.log('items to splice ' + this.lastTimeAdded);
-        console.log('splice from ' + (this.orders.length - this.lastTimeAdded - 1));
-        this.orders.splice(this.orders.length - this.lastTimeAdded);
-        console.log('after splice result');
-        console.log(this.orders);
-        this.lastTimeAdded = 0;
-      }
       this.currentPage = currentPage;
       this.currentCheckBoxHeader = this.checkBoxHeaderValues.get(this.currentPage);
       //all items - rows per page * pages (full page scenario).
       // if result is smaller then zero - some empty rows are required.
-      let itemsToAdd = (this.currentPage * pageEvent.rows) - this.dt._totalRecords;
-      console.log('full page senerio sum ' + this.currentPage * pageEvent.rows);
-      console.log('all orders ' + this.dt._totalRecords);
-      console.log('items to add ' + itemsToAdd);
-
-      for (let index = 0; index < itemsToAdd; index++) {
-        this.orders.push({});
-      }
-      console.log('current oreders');
-      console.log(this.orders);
       this.lastPage = currentPage;
-      this.lastTimeAdded = itemsToAdd;
     }
     this.currentCheckBoxHeader = this.isHeaderChecked();
     if (this.isFilter) {
@@ -97,6 +71,7 @@ export class OrdersComponent implements OnInit {
     //generate barcode for each order (if the orders is still in 'waiting' mode).
     $(document).ready(() => {
       this.loopOnCurrentPage((item) => {
+        console.log(item);
         if (item) {
           if (item.status == 'waiting') {
             JsBarcode(`#b${item.id}`, item.id, {
@@ -141,7 +116,9 @@ export class OrdersComponent implements OnInit {
     let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
     for (let index = firstItemIndex; index < firstItemIndex + this.rowPerPage; index++) {
       const currentOrder = (this.isFilter) ? this.filterResult[index] : this.orders[index];
-      func(currentOrder);
+      if(currentOrder){
+        func(currentOrder);
+      }
     }
   }
 
