@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, ViewChild, IterableDiffers, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewChild, IterableDiffers, Input, Output, EventEmitter, ɵConsole } from '@angular/core';
 import { FilterUtils } from 'primeng/utils';
 import { Table } from 'primeng';
 declare var JsBarcode: any;
@@ -99,7 +99,12 @@ export class OrdersComponent implements OnInit {
       { field: 'comments', header: 'comments' }
     ];
     //custome filter (primeNg API) - date filter.
-    FilterUtils['Date'] = (value: Date, filter: Date): boolean => {
+    FilterUtils['Date'] = (value: string, filter: Date): boolean => {
+      let values = value.split('/');
+      let temp = values[0];
+      values[0] = values[1];
+      values[1] = temp;
+      value = values.join('/');
       this.yearFilter = false;
       if (filter === undefined || filter === null) {
         return true;
