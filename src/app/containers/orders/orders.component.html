@@ -3,7 +3,7 @@
     <div class="tableSection">
 
         <p-table #dt [columns]="cols" [virtualRowHeight]="30" [value]="orders" (onPage)="paginate($event)"
-            [paginator]="true" [(selection)]="selectedRows" dataKey="id" [rows]="rowPerPage" >
+            [paginator]="true" [(selection)]="selectedRows" dataKey="id" [rows]="rowPerPage">
             <ng-template pTemplate="caption" style="display: flex;">
                 <div style="text-align: left;" class="filterContainer">
                     <!-- <i class="fa fa-search" style="margin:4px 4px 0 0"></i> -->
@@ -28,15 +28,15 @@
                         status
                     </th>
                     <th *ngIf='orders[0]?.status == "waiting"'>
-                        barcode 
+                        barcode
                     </th>
                     <th *ngIf='orders[0]?.status == "waiting"'>
-                    <!-- placeHolder for 'x' option -->
+                        <!-- placeHolder for 'x' option -->
                     </th>
                 </tr>
                 <tr *ngIf='filter'>
-                    <th style="width: 3em">
-                    <!-- placeHolder for blankcheckBox -->
+                    <th style="width: 3em" *ngIf='orders[0]?.status == "waiting"'>
+                        <!-- placeHolder for blankcheckBox -->
                     </th>
                     <th *ngFor="let col of columns" id="filters" [ngSwitch]="col.field">
                         <span class="serachArea">
@@ -58,7 +58,7 @@
                                 </i-feather>
                             </span>
                             <!-- <p-dropdown *ngSwitchCase="'orderdate'" [options]="orderdate" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown> -->
-                            <span class="inputContainer" *ngSwitchCase="'produniqkey'">
+                            <span class="inputContainer" *ngSwitchCase="'produniqekey'">
                                 <input pInputText type="text"
                                     (input)="dt.filter($event.target.value, col.field, 'contains')">
                                 <i-feather name="search" class="search small"></i-feather>
@@ -71,6 +71,12 @@
                             </span>
                         </span>
                     </th>
+                    <th style="width: 3em">
+                        <!-- placeHolder for blankcheckBox -->
+                    </th>
+                    <th style="width: 3em" *ngIf='orders[0]?.status == "waiting"'>
+                        <!-- placeHolder for blankcheckBox -->
+                    </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
@@ -78,7 +84,8 @@
                     <td *ngIf='orders[0]?.status == "waiting"'>
                         <!-- <p-tableCheckbox  id="{{rowData.id}}" [disabled]="!rowData.id"  *ngIf='rowData'  [value]="!rowData.id ? false : rowData"></p-tableCheckbox> -->
                         <p-checkbox binary="true" id="{{rowData.id}}" *ngIf='rowData.id'
-                            [ngModel]="(this.selectedRows.has(rowData.id))" (onChange)='onCheckBoxChange($event,rowData.id)'></p-checkbox>
+                            [ngModel]="(this.selectedRows.has(rowData.id))"
+                            (onChange)='onCheckBoxChange($event,rowData.id)'></p-checkbox>
                     </td>
                     <td style=" height: 24px !important; padding: 0 !important;" *ngFor="let col of columns">
                         {{rowData[col.field]}}

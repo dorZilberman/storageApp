@@ -22,7 +22,7 @@ export class PostgresService {
   }
 
   async update(url: string, id: string): Promise<any> {
-    return await this._http.put(url, { orderId: id, newStatus: 'failure' }, { responseType: 'json' }).toPromise();
+    return await this._http.put(url, { orderId: id, newStatus: 'done' }, { responseType: 'json' }).toPromise();
   }
 
   async delete(url: string, id): Promise<any> {

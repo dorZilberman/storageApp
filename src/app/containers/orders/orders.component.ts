@@ -87,15 +87,15 @@ export class OrdersComponent implements OnInit {
     if (!this.orders) {
       alert('connection error');
       this.orders = [
-        { "id": "99", "orderdate": "2019-12-30T22:00:00.000Z", "produniqkey": "1234", "comments": "sup sup sup sup sup" }, { "id": "8", "orderdate": "2019-12-30T22:00:00.000Z", "produniqkey": "25", "comments": null }, { "id": "18", "orderdate": "2020-01-01T22:00:00.000Z", "produniqkey": "1234", "comments": "מהר" }, { "id": "12", "orderdate": "2020-01-01T22:00:00.000Z", "produniqkey": "18", "comments": null },
-        { "id": "23", "orderdate": "2020-01-01T22:00:00.000Z", "produniqkey": "1113", "comments": "שיהיה מהר" },
+        { "id": "99", "orderdate": "2019-12-30T22:00:00.000Z", "produniqekey": "1234", "comments": "sup sup sup sup sup" }, { "id": "8", "orderdate": "2019-12-30T22:00:00.000Z", "produniqekey": "25", "comments": null }, { "id": "18", "orderdate": "2020-01-01T22:00:00.000Z", "produniqekey": "1234", "comments": "מהר" }, { "id": "12", "orderdate": "2020-01-01T22:00:00.000Z", "produniqekey": "18", "comments": null },
+        { "id": "23", "orderdate": "2020-01-01T22:00:00.000Z", "produniqekey": "1113", "comments": "שיהיה מהר" },
       ];
     }
 
     this.cols = [
       { field: 'id', header: 'id' },
       { field: 'orderdate', header: 'orderdate' },
-      { field: 'produniqkey', header: 'produniqkey' },
+      { field: 'produniqekey', header: 'produniqekey' },
       { field: 'comments', header: 'comments' }
     ];
     //custome filter (primeNg API) - date filter.
