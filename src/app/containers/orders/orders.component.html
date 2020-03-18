@@ -21,8 +21,9 @@
                             [(ngModel)]='currentCheckBoxHeader'></p-checkbox>
                         <!-- <p-tableHeaderCheckbox (onCange)='checkBoxChange($event)'></p-tableHeaderCheckbox> -->
                     </th>
-                    <th *ngFor="let col of columns" id="headers">
+                    <th *ngFor="let col of columns" id="headers" [pSortableColumn]="col.field">
                         {{col.header}}
+                        <p-sortIcon *ngIf="col.field == 'orderdate'" [field]="col.field"></p-sortIcon>
                     </th>
                     <th *ngIf='orders[0]?.status != "waiting"'>
                         status

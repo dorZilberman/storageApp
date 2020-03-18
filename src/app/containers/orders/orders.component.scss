@@ -143,3 +143,9 @@ input {
 ::ng-deep .ui-inputtext {
   width: 100% !important;
 }
+::ng-deep .ui-table .ui-sortable-column.ui-state-highlight .ui-sortable-column-icon .pi .pi-fw .pi-sort{
+  color: #686bca !important;
+}
+::ng-deep .ui-table .ui-sortable-column .ui-sortable-column-icon{
+  color: #686bca !important;
+}
