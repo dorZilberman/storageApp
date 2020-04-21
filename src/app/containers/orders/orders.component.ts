@@ -71,7 +71,6 @@ export class OrdersComponent implements OnInit {
     //generate barcode for each order (if the orders is still in 'waiting' mode).
     $(document).ready(() => {
       this.loopOnCurrentPage((item) => {
-        console.log(item);
         if (item) {
           if (item.status == 'waiting') {
             if(Number(item.id)){
@@ -217,7 +216,7 @@ export class OrdersComponent implements OnInit {
       });
     });
   }
-  cancelOrder(id) {
+  cancelOrder(id?) {
     //specific order canceld.
     if (id) {
       this.cancelEmitter.emit([id]);

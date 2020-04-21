@@ -11,7 +11,7 @@
                         (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
                     <i-feather name="search" class="search small"></i-feather>
                 </div>
-                <i-feather (click)='filter=!filter;' name="filter" class="small" style="cursor: pointer;"></i-feather>
+                <i-feather (click)='showFilterTr=!showFilterTr;' name="filter" class="small" style="cursor: pointer;"></i-feather>
             </ng-template>
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -35,7 +35,7 @@
                         <!-- placeHolder for 'x' option -->
                     </th>
                 </tr>
-                <tr *ngIf='filter'>
+                <tr *ngIf='showFilterTr'>
                     <th style="width: 3em" *ngIf='orders[0]?.status == "waiting"'>
                         <!-- placeHolder for blankcheckBox -->
                     </th>
