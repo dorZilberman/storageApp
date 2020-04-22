@@ -14,12 +14,12 @@ export class OrdersComponent implements OnInit {
   @ViewChild('dt', { static: true }) dt: Table;
   //fire when component is rendered or have been removed.
   @ViewChild('barcode', { static: false }) set userContent(element) {
-    // here you get access only when element is rendered 
+    // here you get access only when element is rendered
     if (element) {
       this.isSummaryBarcodeDisplay = true;
       JsBarcode("#barcode", this.selectedRows.size);
     } else {
-      //component have been removed from dom. 
+      //component have been removed from dom.
       this.isSummaryBarcodeDisplay = false;
     }
   }
@@ -71,12 +71,13 @@ export class OrdersComponent implements OnInit {
     //generate barcode for each order (if the orders is still in 'waiting' mode).
     $(document).ready(() => {
       this.loopOnCurrentPage((item) => {
-        console.log(item);
         if (item) {
           if (item.status == 'waiting') {
-            JsBarcode(`#b${item.id}`, item.id, {
-              height: 25
-            });
+            if(Number(item.id)){
+              JsBarcode(`#b${item.id}`, item.id, {
+                height: 25
+              });
+            }
           }
         }
       });
@@ -215,7 +216,7 @@ export class OrdersComponent implements OnInit {
       });
     });
   }
-  cancelOrder(id) {
+  cancelOrder(id?) {
     //specific order canceld.
     if (id) {
       this.cancelEmitter.emit([id]);

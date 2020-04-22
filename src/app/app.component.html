@@ -10,14 +10,14 @@
   <div class="refresh">
     <!-- <i-feather name="refresh-cw" class="refresh small"></i-feather> -->
     <app-refresh-btn (refreshEmitter)='onRefresh()'></app-refresh-btn>
-  </div>  
+  </div>
   <p-tabView>
     <p-tabPanel header="Orders" leftIcon="pi pi-calendar">
       <span *ngIf='(orders | filterArray: waitingFilter) as res'>
-        <app-orders (cancelEmitter)='onCancel($event,selected)' *ngIf='res?.length > 0' [orders]='res'
+        <app-orders (cancelEmitter)='onCancel($event)' *ngIf='res?.length > 0' [orders]='res'
           [rowPerPage]='6'></app-orders>
         <span *ngIf='res?.length == 0'>
-          No Data Yet 
+          No Data Yet
           {{res.length}}
         </span>
       </span>
@@ -26,7 +26,7 @@
       <span *ngIf='(orders  | filterArray: readyFilter) as res'>
         <app-orders *ngIf='orders' [orders]='res' [rowPerPage]='10'></app-orders>
        <span *ngIf='res?.length == 0'>
-         No Data Yet 
+         No Data Yet
        </span>
       </span>
     </p-tabPanel>
