@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, ViewChild, IterableDiffers, Input, Output, EventEmitter, ɵConsole } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { FilterUtils } from 'primeng/utils';
 import { Table } from 'primeng';
 declare var JsBarcode: any;
@@ -73,7 +73,7 @@ export class OrdersComponent implements OnInit {
       this.loopOnCurrentPage((item) => {
         if (item) {
           if (item.status == 'waiting') {
-            if(Number(item.id)){
+            if (Number(item.id)) {
               JsBarcode(`#b${item.id}`, item.id, {
                 height: 25
               });
@@ -122,7 +122,7 @@ export class OrdersComponent implements OnInit {
     let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
     for (let index = firstItemIndex; index < firstItemIndex + this.rowPerPage; index++) {
       const currentOrder = (this.isFilter) ? this.filterResult[index] : this.orders[index];
-      if(currentOrder){
+      if (currentOrder) {
         func(currentOrder);
       }
     }
@@ -188,7 +188,7 @@ export class OrdersComponent implements OnInit {
       this.filterResult.forEach((item) => {
         if (!this.selectedRows.get(item.id)) {
           checkValues = false;
-        };
+        }
       })
     }
     return checkValues;
@@ -224,8 +224,8 @@ export class OrdersComponent implements OnInit {
     } else { //some orders to cancel (checkBox's).
       let selectedArray = Array.from(this.selectedRows.keys()); //map => array.
       this.cancelEmitter.emit(selectedArray);
-      selectedArray.forEach((id) => {
-        this.selectedRows.delete(id); //delete orders from summary barcode.
+      selectedArray.forEach((orderId) => {
+        this.selectedRows.delete(orderId); //delete orders from summary barcode.
       });
     }
   }

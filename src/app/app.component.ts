@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { PostgresService } from './services/postgres.service';
 import { ContextService } from './services/context.service';
 
