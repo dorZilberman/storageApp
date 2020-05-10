@@ -94,10 +94,10 @@ export class OrdersComponent implements OnInit {
     }
 
     this.cols = [
-      { field: 'id', header: 'id' },
-      { field: 'orderdate', header: 'orderdate' },
-      { field: 'produniqekey', header: 'produniqekey' },
-      { field: 'comments', header: 'comments' }
+      { field: 'id', header: 'id'},
+      { field: 'orderdate', header: 'orderdate'},
+      { field: 'produniqekey', header: 'produniqekey'},
+      { field: 'comments', header: 'comments'}
     ];
     //custome filter (primeNg API) - date filter.
     FilterUtils['Date'] = (value: string, filter: Date): boolean => {
@@ -106,11 +106,9 @@ export class OrdersComponent implements OnInit {
       values[0] = values[1];
       values[1] = temp;
       value = values.join('/');
-      this.yearFilter = false;
       if (filter === undefined || filter === null) {
         return true;
       }
-
       if (value === undefined || value === null) {
         return false;
       }
