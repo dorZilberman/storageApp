@@ -17,7 +17,10 @@ export class OrdersComponent implements OnInit {
     // here you get access only when element is rendered
     if (element) {
       this.isSummaryBarcodeDisplay = true;
-      JsBarcode("#barcode", this.selectedRows.size);
+      JsBarcode("#barcode", this.selectedRows.size, {
+        width: 5,
+        text: `ברקוד המכיל ${this.selectedRows.size} מוצרים`
+      });
     } else {
       //component have been removed from dom.
       this.isSummaryBarcodeDisplay = false;
@@ -40,7 +43,7 @@ export class OrdersComponent implements OnInit {
 
   checkBoxHeaderValues = new Map<number, boolean>(); //key - pageNumber | value - is checked.
 
-  @Input() rowPerPage;
+  @Input() rowsPerPage;
 
   currentCheckBoxHeader = false;
 
@@ -74,8 +77,12 @@ export class OrdersComponent implements OnInit {
         if (item) {
           if (item.status == 'waiting') {
             if (Number(item.id)) {
-              JsBarcode(`#b${item.id}`, item.id, {
-                height: 25
+              JsBarcode(`#b${item.id}`, `05012345678${item.produniqekey}`, {
+                text: item.produniqekey, 
+                height: 100,
+                width: 2,
+                marginTop: 15,
+                fontSize: 30,
               });
             }
           }
@@ -94,10 +101,10 @@ export class OrdersComponent implements OnInit {
     }
 
     this.cols = [
-      { field: 'id', header: 'id'},
-      { field: 'orderdate', header: 'orderdate'},
-      { field: 'produniqekey', header: 'produniqekey'},
-      { field: 'comments', header: 'comments'}
+      { field: 'comments', header: 'הערות'},
+      { field: 'produniqekey', header: 'מק"ט'},
+      { field: 'orderdate', header: 'תאריך הזמנה'},
+      { field: 'id', header: 'מספר הזמנה'}
     ];
     //custome filter (primeNg API) - date filter.
     FilterUtils['Date'] = (value: string, filter: Date): boolean => {
@@ -117,8 +124,8 @@ export class OrdersComponent implements OnInit {
   }
   //generic funtion for loop the current page orders.
   loopOnCurrentPage(func: Function) {
-    let firstItemIndex = (this.currentPage - 1) * this.rowPerPage;
-    for (let index = firstItemIndex; index < firstItemIndex + this.rowPerPage; index++) {
+    let firstItemIndex = (this.currentPage - 1) * this.rowsPerPage;
+    for (let index = firstItemIndex; index < firstItemIndex + this.rowsPerPage; index++) {
       const currentOrder = (this.isFilter) ? this.filterResult[index] : this.orders[index];
       if (currentOrder) {
         func(currentOrder);

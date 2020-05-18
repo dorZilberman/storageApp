@@ -14,19 +14,19 @@
     <app-refresh-btn (refreshEmitter)='onRefresh()'></app-refresh-btn>
   </div>
   <p-tabView>
-    <p-tabPanel header="Orders" leftIcon="pi pi-calendar">
+    <p-tabPanel header="הזמנות" leftIcon="pi pi-calendar">
       <span *ngIf='(orders | filterArray: waitingFilter) as res'>
         <app-orders (cancelEmitter)='onCancel($event)' *ngIf='res?.length > 0' [orders]='res'
-          [rowPerPage]='6'></app-orders>
+          [rowsPerPage]='6'></app-orders>
         <span *ngIf='res?.length == 0'>
           No Data Yet
           {{res.length}}
         </span>
       </span>
     </p-tabPanel>
-    <p-tabPanel header="History" leftIcon="pi pi-inbox">
+    <p-tabPanel header="היסטוריית הזמנות" leftIcon="pi pi-inbox">
       <span *ngIf='(orders  | filterArray: readyFilter) as res'>
-        <app-orders *ngIf='orders' [orders]='res' [rowPerPage]='10'></app-orders>
+        <app-orders *ngIf='orders' [orders]='res' [rowsPerPage]='6'></app-orders>
        <span *ngIf='res?.length == 0'>
          No Data Yet
        </span>
