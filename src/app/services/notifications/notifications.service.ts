@@ -9,7 +9,7 @@ export class NotificationsService {
   private orderDeletedEmitter = new EventEmitter();
   constructor() {
 
-    this.socket = io.connect('https://192.168.43.143:3001',{secure:true});
+    this.socket = io.connect('https://localhost:3001',{secure:true});
     console.log(this.socket);
     this.socket.on('connect', () => {
       console.log('connect');
