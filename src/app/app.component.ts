@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { PostgresService } from './services/postgres.service';
-import { ContextService } from './services/context.service';
-
+import { PostgresService } from './services/postgres/postgres.service';
+import { ContextService } from './services/context/context.service';
+import { MsalService } from '@azure/msal-angular';
+import { userService } from './services/azureAD/azure-ad.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,12 +11,17 @@ import { ContextService } from './services/context.service';
 export class AppComponent {
   title = 'storageApp';
   orders;
-  constructor(private _postgres: PostgresService, private _context: ContextService) {
-    this.onRefresh();
+  constructor(private authService: MsalService, private userService: userService, private _postgres: PostgresService, private _context: ContextService) {
+    this.authService.loginPopup({
+      extraScopesToConsent: ["user.read", "openid", "profile"]
+    }).then((user) => {
+      let id = user.account.userName.split('@')[0];
+      this.userService.setUserID(id);
+      this.onRefresh();
+    });
   }
   onRefresh() {
-    console.log('res');
-    this._postgres.readMany(this._context.postgressUrl).then((res) => {
+    this._postgres.readByID(this._context.postgressUrl, this.userService.getUserID()).then((res) => {
       res.forEach(order => {
         //@ts-ignore
         order.orderdate = new Date(order.orderdate).format("dd/mm/yy");

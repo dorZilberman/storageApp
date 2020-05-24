@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { FilterUtils } from 'primeng/utils';
 import { Table } from 'primeng';
+import { PostgresService } from 'src/app/services/postgres/postgres.service';
+import { userService } from '../../services/azureAD/azure-ad.service';
+import { ContextService } from 'src/app/services/context/context.service';
 declare var JsBarcode: any;
 
 @Component({
@@ -53,7 +56,7 @@ export class OrdersComponent implements OnInit {
   isFilter = false; //is filter activated.
   filterResult = []; //filtered items.
 
-  constructor() {
+  constructor(private contextService: ContextService, private postgresService: PostgresService, private userService: userService) {
   }
 
   paginate(pageEvent) {
@@ -77,12 +80,17 @@ export class OrdersComponent implements OnInit {
         if (item) {
           if (item.status == 'waiting') {
             if (Number(item.id)) {
-              JsBarcode(`#b${item.id}`, `05012345678${item.produniqekey}`, {
-                text: item.produniqekey, 
-                height: 100,
-                width: 2,
-                marginTop: 15,
-                fontSize: 30,
+              let phone;
+              this.postgresService.getPhone(this.contextService.postgressUrl, item.id).then((data) => {
+                phone = data[0].phone;
+              }).then(() => {
+                JsBarcode(`#b${item.id}`, `${phone},${item.produniqekey}`, {
+                  text: item.produniqekey,
+                  height: 100,
+                  width: 2,
+                  marginTop: 15,
+                  fontSize: 30,
+                });
               });
             }
           }
@@ -92,19 +100,11 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.orders) {
-      alert('connection error');
-      this.orders = [
-        { "id": "99", "orderdate": "2019-12-30T22:00:00.000Z", "produniqekey": "1234", "comments": "sup sup sup sup sup" }, { "id": "8", "orderdate": "2019-12-30T22:00:00.000Z", "produniqekey": "25", "comments": null }, { "id": "18", "orderdate": "2020-01-01T22:00:00.000Z", "produniqekey": "1234", "comments": "מהר" }, { "id": "12", "orderdate": "2020-01-01T22:00:00.000Z", "produniqekey": "18", "comments": null },
-        { "id": "23", "orderdate": "2020-01-01T22:00:00.000Z", "produniqekey": "1113", "comments": "שיהיה מהר" },
-      ];
-    }
-
     this.cols = [
-      { field: 'comments', header: 'הערות'},
-      { field: 'produniqekey', header: 'מק"ט'},
-      { field: 'orderdate', header: 'תאריך הזמנה'},
-      { field: 'id', header: 'מספר הזמנה'}
+      { field: 'comments', header: 'הערות' },
+      { field: 'produniqekey', header: 'מק"ט' },
+      { field: 'orderdate', header: 'תאריך הזמנה' },
+      { field: 'id', header: 'מספר הזמנה' }
     ];
     //custome filter (primeNg API) - date filter.
     FilterUtils['Date'] = (value: string, filter: Date): boolean => {

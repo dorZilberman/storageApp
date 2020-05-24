@@ -19,8 +19,6 @@ export class RefreshBtnComponent implements OnInit {
     this.refresher.click(this.refresh.bind(this));
   }
   refresh() {
-    console.log('refresh');
-    console.log(this);
     this.refreshEmitter.emit();
     this.refresher.addClass('loading')
 
@@ -43,7 +41,6 @@ export class RefreshBtnComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    console.log('onDestroy');
     this.subscription.forEach((subscriber) => {
       subscriber.unsubscribe();
     });
