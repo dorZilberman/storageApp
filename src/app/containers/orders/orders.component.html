@@ -42,7 +42,7 @@
           </th>
         </tr>
         <tr *ngIf='showFilterTr'>
-          <th id="blankcheckBox1" style="width: 3em">
+          <th id="blankcheckBox1" style="width: 3em" *ngIf='orders[0]?.status == "waiting"'>
             <!-- placeHolder for blankcheckBox -->
           </th>
           <th id="blankcheckBox2" style="width: 3em" *ngIf='orders[0]?.status == "waiting"'>
@@ -51,6 +51,10 @@
           <th *ngFor="let col of columns" id="filters" [ngSwitch]="col.field">
             <span class="serachArea">
               <span class="inputContainer" *ngSwitchCase="'id'">
+                <input pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                <i-feather name="search" class="search small"></i-feather>
+              </span>
+              <span class="inputContainer" *ngSwitchCase="'name'">
                 <input pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                 <i-feather name="search" class="search small"></i-feather>
               </span>

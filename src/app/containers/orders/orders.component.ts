@@ -80,17 +80,12 @@ export class OrdersComponent implements OnInit {
         if (item) {
           if (item.status == 'waiting') {
             if (Number(item.id)) {
-              let phone;
-              this.postgresService.getPhone(this.contextService.postgressUrl, item.id).then((data) => {
-                phone = data[0].phone;
-              }).then(() => {
-                JsBarcode(`#b${item.id}`, `${phone},${item.produniqekey}`, {
-                  text: item.produniqekey,
-                  height: 100,
-                  width: 2,
-                  marginTop: 15,
-                  fontSize: 30,
-                });
+              JsBarcode(`#b${item.id}`, `${item.mobilePhone},${item.produniqekey}`, {
+                text: item.produniqekey,
+                height: 100,
+                width: 2,
+                marginTop: 15,
+                fontSize: 30,
               });
             }
           }
@@ -103,6 +98,8 @@ export class OrdersComponent implements OnInit {
     this.cols = [
       { field: 'comments', header: 'הערות' },
       { field: 'produniqekey', header: 'מק"ט' },
+      { field: 'mobilePhone', header: 'מספר טלפון' },
+      { field: 'name', header: 'שם מלא' },
       { field: 'orderdate', header: 'תאריך הזמנה' },
       { field: 'id', header: 'מספר הזמנה' }
     ];
