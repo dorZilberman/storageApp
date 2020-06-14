@@ -219,6 +219,8 @@ export class OrdersComponent implements OnInit {
     });
   }
   cancelOrder(id?) {
+    let customEvent = new CustomEvent('refreshStart');
+    dispatchEvent(customEvent);
     //specific order canceld.
     if (id) {
       this.cancelEmitter.emit([id]);
@@ -229,6 +231,8 @@ export class OrdersComponent implements OnInit {
       selectedArray.forEach((orderId) => {
         this.selectedRows.delete(orderId); //delete orders from summary barcode.
       });
+      dispatchEvent(customEvent);
+
     }
   }
   ngOnChanges(change) {

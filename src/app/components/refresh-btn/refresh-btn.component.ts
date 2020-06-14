@@ -11,33 +11,44 @@ export class RefreshBtnComponent implements OnInit {
   subscription: Subscription[] = [];
   refresher;
   constructor(private _notificationsService: NotificationsService) {
-    this.subscription.push(this._notificationsService.onOrderDeleted(this, this.refresh));
+    this.subscription.push(this._notificationsService.onOrderDeleted(this, this.startRefresh));
   }
 
   ngOnInit() {
     this.refresher = $('.refresher');
-    this.refresher.click(this.refresh.bind(this));
+    this.refresher.click(this.startRefresh.bind(this));
+    addEventListener('refreshStart', () => {
+      this.startRefresh();
+    });
+    addEventListener('refreshEnd', () => {
+      this.endRefresh();
+    });
   }
-  refresh() {
+
+  startRefresh() {
     this.refreshEmitter.emit();
-    this.refresher.addClass('loading')
+    this.refresher.addClass('loading');
+    console.log("IM LOADING");
+  }
 
-    setTimeout(() => {
-      this.refresher.removeClass('loading')
-      this.refresher.addClass('success')
-      setTimeout(() => this.refresher.removeClass('success'), 2000)
-    }, 1500)
+  endRefresh() {
+    this.refresher.removeClass('loading');
+    this.refresher.addClass('success');
+    console.log("END LOADING");
+    setTimeout(() => this.refresher.removeClass('success'), 2000);
+  }
+
+  refresh() {
     $('.btn-refresh-error').on('click', () => {
-      this.refresher.addClass('loading')
-
-      setTimeout(() => {
-        this.refresher.removeClass('loading')
-        this.refresher.addClass('error')
-
-        setTimeout(() => this.refresher.removeClass('error'), 2000)
-
-      }, 1500)
-    })
+      this.refresher.addClass('loading');
+      console.log("IM LOADING ON CLICK");
+      addEventListener('refreshEnd', () => {
+        this.refresher.removeClass('loading');
+        this.refresher.addClass('error');
+        console.log("IM ON ERROR");
+        setTimeout(() => this.refresher.removeClass('error'), 2000);
+      });
+    });
   }
 
   ngOnDestroy() {

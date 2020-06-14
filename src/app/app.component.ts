@@ -11,30 +11,43 @@ import { userService } from './services/azureAD/azure-ad.service';
 export class AppComponent {
   title = 'storageApp';
   orders;
+  private startRefreshEvent: CustomEvent;
+  private endRefreshEvent: CustomEvent;
   constructor(private authService: MsalService, private userService: userService, private _postgres: PostgresService, private _context: ContextService) {
     this.authService.loginPopup({
       extraScopesToConsent: ["user.read", "openid", "profile"]
     }).then((user) => {
       let id = user.account.userName.split('@')[0];
       this.userService.setUserID(id);
-      this.onRefresh();
+      this._postgres.getJobByID(this._context.postgressUrl).then((answer) => {
+        if (answer.jobTitle === 'אפסנאי') {
+          this.startRefreshEvent = new CustomEvent('refreshStart');
+          this.endRefreshEvent = new CustomEvent('refreshEnd');
+          dispatchEvent(this.startRefreshEvent);
+          this.onRefresh();
+        } else {
+          alert("נחסמת");
+        }
+      });
     });
   }
   onRefresh() {
-    this._postgres.readByID(this._context.postgressUrl, this.userService.getUserID()).then((res) => {
+    this._postgres.readByID(this._context.postgressUrl).then((res) => {
       res.forEach(order => {
         //@ts-ignore
         order.orderdate = new Date(order.orderdate).format("dd/mm/yy");
       });
       this.orders = (Array.isArray(res)) ? res : [];
+      dispatchEvent(this.endRefreshEvent);
     });
   }
   onCancel(selected: any[]) {
     selected.forEach((itemId) => {
       this._postgres.update(this._context.postgressUrl, itemId).then((res) => {
         this.orders = (Array.isArray(res)) ? res : [];
-      })
-    })
+      });
+    });
+    this.onRefresh();
   }
 
   waitingFilter(item) {
