@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import io from '../../../assets/scripts/socket.io.js';
+import { ContextService } from '../context/context.service.js';
 
 @Injectable({
   providedIn: 'root'
@@ -7,8 +8,8 @@ import io from '../../../assets/scripts/socket.io.js';
 export class NotificationsService {
   private socket;
   private orderDeletedEmitter = new EventEmitter();
-  constructor() {
-    this.socket = io.connect('https://localhost:3001', { secure: true });
+  constructor(private contextService: ContextService) {
+    this.socket = io.connect(this.contextService.serverURL, { secure: true });
     this.socket.on('connect', () => {
       console.log('connect');
     });

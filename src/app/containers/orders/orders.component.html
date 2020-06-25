@@ -58,6 +58,10 @@
                 <input pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                 <i-feather name="search" class="search small"></i-feather>
               </span>
+              <span class="inputContainer" *ngSwitchCase="'mobilePhone'">
+                <input pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                <i-feather name="search" class="search small"></i-feather>
+              </span>
               <span class="inputContainer" *ngSwitchCase="'orderdate'">
                 <p-calendar [(ngModel)]="dateValue" view="month" dateFormat="mm/yy"
                   (onSelect)="dt.filter($event, col.field, 'Date');   this.yearFilter = true;" [readonlyInput]="true">

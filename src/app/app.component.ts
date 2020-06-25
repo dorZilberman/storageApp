@@ -19,7 +19,7 @@ export class AppComponent {
     }).then((user) => {
       let id = user.account.userName.split('@')[0];
       this.userService.setUserID(id);
-      this._postgres.getJobByID(this._context.postgressUrl).then((answer) => {
+      this._postgres.getJobByID(this._context.serverURL).then((answer) => {
         if (answer.jobTitle === 'אפסנאי') {
           this.startRefreshEvent = new CustomEvent('refreshStart');
           this.endRefreshEvent = new CustomEvent('refreshEnd');
@@ -32,7 +32,7 @@ export class AppComponent {
     });
   }
   onRefresh() {
-    this._postgres.readByID(this._context.postgressUrl).then((res) => {
+    this._postgres.readByID(this._context.serverURL).then((res) => {
       res.forEach(order => {
         //@ts-ignore
         order.orderdate = new Date(order.orderdate).format("dd/mm/yy");
@@ -43,7 +43,7 @@ export class AppComponent {
   }
   onCancel(selected: any[]) {
     selected.forEach((itemId) => {
-      this._postgres.update(this._context.postgressUrl, itemId).then((res) => {
+      this._postgres.update(this._context.serverURL, itemId).then((res) => {
         this.orders = (Array.isArray(res)) ? res : [];
       });
     });

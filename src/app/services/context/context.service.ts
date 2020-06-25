@@ -4,6 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ContextService {
-  public postgressUrl = 'https://localhost:3001';
+  public serverURL = 'https://logisticserver.azurewebsites.net';
   constructor() { }
 }
