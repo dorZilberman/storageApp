@@ -1,12 +1,14 @@
-import { BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { MsalModule } from '../../node_modules/@azure/msal-angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { OrdersComponent } from './containers/orders/orders.component';
-import {TableModule,DropdownModule, MultiSelectModule,CalendarModule, 
-  CheckboxModule, TabViewModule, ButtonModule} from '../../node_modules/primeng';
+import {
+  TableModule, DropdownModule, MultiSelectModule, CalendarModule,
+  CheckboxModule, TabViewModule, ButtonModule
+} from '../../node_modules/primeng';
 import { FormsModule } from '@angular/forms';
 import { IconsModule } from './icons/icons.module';
 import { HttpClientModule } from '@angular/common/http';
