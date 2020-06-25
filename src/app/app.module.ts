@@ -38,7 +38,7 @@ import { RefreshBtnComponent } from './components/refresh-btn/refresh-btn.compon
       auth: {
         clientId: '5afdca2d-1b20-4a80-b949-07469fe2883e',
         authority: 'https://login.microsoftonline.com/78820852-55fa-450b-908d-45c0d911e76b',
-        redirectUri: 'https://localhost:8080'
+        redirectUri: 'https://storageapp.azurewebsites.net'
       },
       cache: {
         cacheLocation: 'localStorage',
