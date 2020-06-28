@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/4e3cd272-7916-4123-ae21-2b24917867f9/resourceGroups/PushLogs/providers/Microsoft.Web/sites/StorageApp",
+    "appService.deploySubpath": "."
+}
