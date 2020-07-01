@@ -3,7 +3,7 @@
     <span class="header-logo">
       <img src="../assets/img/shipping2.svg" alt="logo">
       <h3>
-        IAF LOGISTIC
+        לוגיסטיקה בדחיפה
       </h3>
     </span>
   </span>
@@ -16,8 +16,8 @@
   <p-tabView>
     <p-tabPanel header="הזמנות" leftIcon="pi pi-calendar">
       <span *ngIf='(orders | filterArray: waitingFilter) as res'>
-        <app-orders (cancelEmitter)='onCancel($event)' *ngIf='res?.length > 0' [orders]='res'
-          [rowsPerPage]='6'></app-orders>
+        <app-orders (cancelEmitter)='onCancel($event)' *ngIf='res?.length > 0' [orders]='res' [rowsPerPage]='6'>
+        </app-orders>
         <span *ngIf='res?.length == 0'>
           No Data Yet
           {{res.length}}
@@ -27,9 +27,9 @@
     <p-tabPanel header="היסטוריית הזמנות" leftIcon="pi pi-inbox">
       <span *ngIf='(orders  | filterArray: readyFilter) as res'>
         <app-orders *ngIf='orders' [orders]='res' [rowsPerPage]='6'></app-orders>
-       <span *ngIf='res?.length == 0'>
-         No Data Yet
-       </span>
+        <span *ngIf='res?.length == 0'>
+          No Data Yet
+        </span>
       </span>
     </p-tabPanel>
   </p-tabView>

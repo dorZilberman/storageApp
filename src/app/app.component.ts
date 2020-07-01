@@ -37,7 +37,7 @@ export class AppComponent {
       });
     });
   }
-  
+
   onRefresh() {
     this._postgres.readByID(this._context.serverURL, this.userService.getUserID()).then((res) => {
       res.forEach(order => {

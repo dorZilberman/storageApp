@@ -137,7 +137,10 @@ export class OrdersComponent implements OnInit {
       this.selectedRows.delete(id);
     }
     //generate summary barcode.
-    (this.isSummaryBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size) : '';
+    (this.isSummaryBarcodeDisplay) ? JsBarcode("#barcode", this.selectedRows.size, {
+      width: 5,
+      text: `ברקוד המכיל ${this.selectedRows.size} מוצרים`
+    }) : '';
     this.currentCheckBoxHeader = this.isHeaderChecked();
     if (this.isFilter) {
       this.checkBoxHeaderValues.set(1, this.currentCheckBoxHeader);
