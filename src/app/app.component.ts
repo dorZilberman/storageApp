@@ -16,7 +16,7 @@ export class AppComponent {
   private startRefreshEvent: CustomEvent;
   private endRefreshEvent: CustomEvent;
   constructor(private _router: Router, private userService: userService, private _postgres: PostgresService,
-    private _context: ContextService, private _appState: AppStateService, private http: HttpClient) {
+    private _context: ContextService, public _appState: AppStateService, private http: HttpClient) {
     this._appState.pageNotAuthorized = false;
     this._appState.pageNotFound = false;
 
