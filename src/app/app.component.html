@@ -9,28 +9,39 @@
   </span>
   <img src="../assets/img/108.webp" alt="108 logo" id="logo108">
 </div>
-<div class="app-container">
-  <div class="refresh">
-    <app-refresh-btn (refreshEmitter)='onRefresh()'></app-refresh-btn>
+
+<div class="page">
+  <div *ngIf="_appState.pageNotFound">
+    <router-outlet></router-outlet>
   </div>
-  <p-tabView>
-    <p-tabPanel header="הזמנות" leftIcon="pi pi-calendar">
-      <span *ngIf='(orders | filterArray: waitingFilter) as res'>
-        <app-orders (cancelEmitter)='onCancel($event)' *ngIf='res?.length > 0' [orders]='res' [rowsPerPage]='6'>
-        </app-orders>
-        <span *ngIf='res?.length == 0'>
-          No Data Yet
-          {{res.length}}
+
+  <div *ngIf="_appState.pageNotAuthorized">
+    <router-outlet></router-outlet>
+  </div>
+
+  <div *ngIf="!(_appState.pageNotAuthorized || _appState.pageNotFound)" class="app-container">
+    <div class="refresh">
+      <app-refresh-btn (refreshEmitter)='onRefresh()'></app-refresh-btn>
+    </div>
+    <p-tabView>
+      <p-tabPanel header="הזמנות" leftIcon="pi pi-calendar">
+        <span *ngIf='(orders | filterArray: waitingFilter) as res'>
+          <app-orders (cancelEmitter)='onCancel($event)' *ngIf='res?.length > 0' [orders]='res' [rowsPerPage]='6'>
+          </app-orders>
+          <span *ngIf='res?.length == 0'>
+            No Data Yet
+            {{res.length}}
+          </span>
         </span>
-      </span>
-    </p-tabPanel>
-    <p-tabPanel header="היסטוריית הזמנות" leftIcon="pi pi-inbox">
-      <span *ngIf='(orders  | filterArray: readyFilter) as res'>
-        <app-orders *ngIf='orders' [orders]='res' [rowsPerPage]='6'></app-orders>
-        <span *ngIf='res?.length == 0'>
-          No Data Yet
+      </p-tabPanel>
+      <p-tabPanel header="היסטוריית הזמנות" leftIcon="pi pi-inbox">
+        <span *ngIf='(orders  | filterArray: readyFilter) as res'>
+          <app-orders *ngIf='orders' [orders]='res' [rowsPerPage]='6'></app-orders>
+          <span *ngIf='res?.length == 0'>
+            No Data Yet
+          </span>
         </span>
-      </span>
-    </p-tabPanel>
-  </p-tabView>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
 </div>

@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { MsalModule } from '../../node_modules/@azure/msal-angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { OrdersComponent } from './containers/orders/orders.component';
@@ -14,13 +13,17 @@ import { IconsModule } from './icons/icons.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FilterArrayPipe } from './pipes/filter-array.pipe';
 import { RefreshBtnComponent } from './components/refresh-btn/refresh-btn.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     OrdersComponent,
     FilterArrayPipe,
-    RefreshBtnComponent
+    RefreshBtnComponent,
+    NotFoundComponent,
+    NotAuthorizedComponent
   ],
   imports: [
     BrowserModule,
@@ -36,28 +39,6 @@ import { RefreshBtnComponent } from './components/refresh-btn/refresh-btn.compon
     TabViewModule,
     HttpClientModule,
     ButtonModule,
-    MsalModule.forRoot({
-      auth: {
-        clientId: '5afdca2d-1b20-4a80-b949-07469fe2883e',
-        authority: 'https://login.microsoftonline.com/78820852-55fa-450b-908d-45c0d911e76b',
-        redirectUri: 'https://localhost:8080'
-      },
-      cache: {
-        cacheLocation: 'localStorage',
-      },
-    }, {
-      popUp: false,
-      consentScopes: [
-        'user.read',
-        'openid',
-        'profile',
-      ],
-      unprotectedResources: [],
-      protectedResourceMap: [
-        ['https://graph.microsoft.com/v1.0/me', ['user.read']]
-      ],
-      extraQueryParameters: {}
-    })
   ],
   providers: [],
   bootstrap: [AppComponent]

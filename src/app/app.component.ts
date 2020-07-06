@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { PostgresService } from './services/postgres/postgres.service';
 import { ContextService } from './services/context/context.service';
-import { MsalService } from '@azure/msal-angular';
 import { userService } from './services/azureAD/azure-ad.service';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AppStateService } from './services/appState/app-state.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,8 +15,10 @@ export class AppComponent {
   orders;
   private startRefreshEvent: CustomEvent;
   private endRefreshEvent: CustomEvent;
-  constructor(private authService: MsalService, private userService: userService, private _postgres: PostgresService,
-    private _context: ContextService, private http: HttpClient) {
+  constructor(private _router: Router, private userService: userService, private _postgres: PostgresService,
+    private _context: ContextService, private _appState: AppStateService, private http: HttpClient) {
+    this._appState.pageNotAuthorized = false;
+    this._appState.pageNotFound = false;
 
     this.http.get('/.auth/me').toPromise().then((data) => {
       let ans = data[0].user_claims.find(prop => {
@@ -27,12 +30,19 @@ export class AppComponent {
       this._postgres.getJobByID(this._context.serverURL, id).then((answer) => {
         if (answer.jobTitle === 'אפסנאי') {
           this.userService.setUserID(id);
-          this.startRefreshEvent = new CustomEvent('refreshStart');
-          this.endRefreshEvent = new CustomEvent('refreshEnd');
-          dispatchEvent(this.startRefreshEvent);
-          this.onRefresh();
+          if (this._router.url == '/orders') {
+            this.startRefreshEvent = new CustomEvent('refreshStart');
+            this.endRefreshEvent = new CustomEvent('refreshEnd');
+            dispatchEvent(this.startRefreshEvent);
+            this.onRefresh();
+          } else {
+            this._appState.pageNotFound = true;
+          }
+        } else if (!(this._router.url == "/404")) {
+          this._appState.pageNotAuthorized = true;
+          this._router.navigate(['403']);
         } else {
-          alert("נחסמת");
+          this._appState.pageNotFound = true;
         }
       });
     });

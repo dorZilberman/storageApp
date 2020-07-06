@@ -36,7 +36,8 @@
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "src/assets/scripts/barcodeGenerator.js",
-              "src/assets/scripts/dateFormater.js"
+              "src/assets/scripts/dateFormater.js",
+              "src/assets/scripts/particle.js"
             ]
           },
           "configurations": {
