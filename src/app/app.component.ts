@@ -26,25 +26,25 @@ export class AppComponent {
           return prop;
         }
       });
-    let id = ans.val.split('@')[0];
-    this._postgres.getJobByID(this._context.serverURL, id).then((answer) => {
-      if (answer.jobTitle === 'אפסנאי') {
-        this.userService.setUserID(id);
-        if (this._router.url == '/orders') {
-          this.startRefreshEvent = new CustomEvent('refreshStart');
-          this.endRefreshEvent = new CustomEvent('refreshEnd');
-          dispatchEvent(this.startRefreshEvent);
-          this.onRefresh();
+      let id = ans.val.split('@')[0];
+      this._postgres.getJobByID(this._context.serverURL, id).then((answer) => {
+        if (answer.jobTitle === 'אפסנאי') {
+          this.userService.setUserID(id);
+          if (this._router.url == '/orders') {
+            this.startRefreshEvent = new CustomEvent('refreshStart');
+            this.endRefreshEvent = new CustomEvent('refreshEnd');
+            dispatchEvent(this.startRefreshEvent);
+            this.onRefresh();
+          } else {
+            this._appState.pageNotFound = true;
+          }
+        } else if (!(this._router.url == "/404")) {
+          this._appState.pageNotAuthorized = true;
+          this._router.navigate(['403']);
         } else {
           this._appState.pageNotFound = true;
         }
-      } else if (!(this._router.url == "/404")) {
-        this._appState.pageNotAuthorized = true;
-        this._router.navigate(['403']);
-      } else {
-        this._appState.pageNotFound = true;
-      }
-    });
+      });
     });
   }
 
@@ -79,11 +79,11 @@ export class AppComponent {
     return (item.status != "waiting") ? true : false;
 
   }
-  expandBtn(){
+  expandBtn() {
     document.getElementById('logOutIcon').classList.add('icon-opened')
     document.getElementById('logOutBtn').classList.add('btn-opened')
   }
-  collapseBtn(){
+  collapseBtn() {
     document.getElementById('logOutIcon').classList.remove('icon-opened')
     document.getElementById('logOutBtn').classList.remove('btn-opened')
   }
