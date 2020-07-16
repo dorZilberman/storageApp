@@ -7,6 +7,10 @@
       </h3>
     </span>
   </span>
+  <div id="logOutDiv"  class="logOutDiv" (mouseenter)="expandBtn()" (mouseleave)="collapseBtn()">
+    <i-feather id="logOutIcon"  class="logOutIcon" name="log-out"></i-feather>
+    <button (click)="onLogOut()"id="logOutBtn" class="logOutBtn">התנתק</button>
+  </div>
   <img src="../assets/img/108.webp" alt="108 logo" id="logo108">
 </div>
 
