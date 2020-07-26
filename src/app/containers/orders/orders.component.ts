@@ -80,7 +80,8 @@ export class OrdersComponent implements OnInit {
         if (item) {
           if (item.status == 'waiting') {
             if (Number(item.id)) {
-              JsBarcode(`#b${item.id}`, `${item.mobilePhone},${item.produniqekey}`, {
+              let randomDigit = Math.floor(Math.random() * 10);
+              JsBarcode(`#b${item.id}`, `${item.produniqekey}${item.mobilePhone}${randomDigit}`, {
                 text: item.produniqekey,
                 height: 100,
                 width: 2,
